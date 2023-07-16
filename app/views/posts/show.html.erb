@@ -1,0 +1,36 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @post %>
+
+<div class="mt-2 btn-group d-flex justify-content-center" role="group" aria-label="Reactions">
+  <% Post::Kinds.each do |kind| %>
+    <button type="button" class="btn <%= kind_to_bootstrap_class(kind) %>">
+      <%= "#{Post::KindsSpanish[kind]}: #{@post.reactions.where(kind: kind).count}" %>
+    </button>
+  <% end %>
+</div>
+<%= render 'comments/form' %>
+<div>
+<%= link_to "Edit this post", edit_post_path(@post), class: "btn btn-success" %> 
+<%= link_to "Back to posts", posts_path, class: "btn btn-info" %>
+
+<%= link_to "Destroy this post", @post, method: :delete, class: "btn btn-danger" %>
+
+<div class="gap-1 mt-3 btn-group d-flex justify-content-center" role="group" aria-label="Reactions">
+  <% Post::Kinds.each do |kind| %>
+    <%= button_to "#{Post::KindsSpanish[kind]}: #{@post.reactions.where(kind: kind).count}",
+                  new_user_reaction_path(post_id: @post.id, reaction_type: "post", kind: kind),
+                  method: :post,
+                  class: "btn #{kind_to_bootstrap_class(kind)}" %>
+  <% end %>
+</div>
+
+</div>
+<div>
+  <h2>Comments:</h2>
+  <% @post.comments.each do |comment| %>
+    <p><strong>User:</strong> <%= comment.user.email %></p>
+    <p><strong>Content:</strong> <%= comment.content %></p>
+    <hr>
+  <% end %>
+</div>
